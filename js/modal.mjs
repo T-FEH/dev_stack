@@ -9,17 +9,12 @@ function overlay() {
   return qs("#repo-modal");
 }
 
-// Format an ISO date as e.g. "14 Jun 2026".
 function formatDate(iso) {
   if (!iso) return "Unknown";
   const d = new Date(iso);
   return Number.isNaN(d.getTime())
     ? "Unknown"
-    : d.toLocaleDateString(undefined, {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      });
+    : d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
 }
 
 export function openModal(repo) {
@@ -27,34 +22,36 @@ export function openModal(repo) {
   if (!el) return;
 
   const topics = repo.topics.length
-    ? repo.topics
-        .map((t) => `<span class="tag">#${escapeHtml(t)}</span>`)
-        .join("")
-    : '<span class="card-sub">No topics listed.</span>';
+    ? repo.topics.map((t) => `<span class="tag">#${escapeHtml(t)}</span>`).join("")
+    : `<span class="card-owner" style="font-size:0.8rem">No topics listed.</span>`;
 
   const lang = repo.language
     ? `<span class="badge">
          <span class="lang-dot" style="background:${languageColor(repo.language)}"></span>
          ${escapeHtml(repo.language)}
        </span>`
-    : "Not specified";
+    : `<span style="color:var(--text-2)">Not specified</span>`;
 
-  qs("#modal-body").innerHTML = `
+  // Header zone: repo name + owner + description
+  qs("#modal-header-zone").innerHTML = `
     <h3 id="modal-title">${escapeHtml(repo.fullName)}</h3>
-    <p class="card-desc">${escapeHtml(repo.description) || "No description provided."}</p>
+    <p class="modal-desc">${escapeHtml(repo.description) || "No description provided."}</p>
+  `;
 
-    <div class="tag-row">${topics}</div>
+  // Body zone: topics, metadata, link
+  qs("#modal-body").innerHTML = `
+    ${repo.topics.length ? `<div class="tag-row" style="margin-bottom:18px">${topics}</div>` : ""}
 
     <dl class="modal-meta">
-      <dt>Language</dt><dd>${lang}</dd>
-      <dt>License</dt><dd>${escapeHtml(repo.license)}</dd>
-      <dt>Watchers</dt><dd>${formatCount(repo.watchers)}</dd>
-      <dt>Stars</dt><dd>${formatCount(repo.stars)}</dd>
-      <dt>Last updated</dt><dd>${formatDate(repo.updatedAt)}</dd>
+      <dt>Language</dt>  <dd>${lang}</dd>
+      <dt>License</dt>   <dd>${escapeHtml(repo.license)}</dd>
+      <dt>Watchers</dt>  <dd>${formatCount(repo.watchers)}</dd>
+      <dt>Stars</dt>     <dd>${formatCount(repo.stars)}</dd>
+      <dt>Updated</dt>   <dd>${formatDate(repo.updatedAt)}</dd>
     </dl>
 
     <a class="btn" href="${escapeHtml(repo.url)}" target="_blank" rel="noopener noreferrer">
-      View on GitHub →
+      View on GitHub &rarr;
     </a>
   `;
 
@@ -70,24 +67,18 @@ export function closeModal() {
   if (lastFocused) lastFocused.focus();
 }
 
-// Wire up close interactions once. Pass a lookup so a card id resolves to a repo.
 export function initModal(getRepoById) {
   const el = overlay();
   if (!el) return;
 
-  // Close on the X button or by clicking the backdrop (but not the dialog).
   el.addEventListener("click", (e) => {
-    if (e.target === el || e.target.closest(".modal-close")) {
-      closeModal();
-    }
+    if (e.target === el || e.target.closest(".modal-close")) closeModal();
   });
 
-  // Close on Escape.
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeModal();
   });
 
-  // Open when a repo card is clicked (but ignore clicks on the save button).
   document.addEventListener("click", (e) => {
     if (e.target.closest(".save-btn")) return;
     const card = e.target.closest('.card[data-type="repo"]');

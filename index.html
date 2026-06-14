@@ -4,34 +4,37 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DevStack — Trending Repos & Tech Articles</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
+
     <header class="site-header">
       <div class="header-inner">
         <a class="logo" href="/index.html">
-          <span class="logo-mark">&lt;/&gt;</span> DevStack
+          <span class="logo-bracket">{</span> DevStack <span class="logo-bracket">}</span>
         </a>
 
         <div class="search-wrap">
-          <input
-            id="global-search"
-            class="search-input"
-            type="search"
-            placeholder="Search repos and articles…"
-            aria-label="Search repositories and articles"
-            autocomplete="off"
-          />
+          <div class="search-box">
+            <input
+              id="global-search"
+              class="search-input"
+              type="search"
+              placeholder="Search repos and articles…"
+              aria-label="Search repositories and articles"
+              autocomplete="off"
+            />
+          </div>
         </div>
 
         <nav class="main-nav" aria-label="Primary">
+          <a class="nav-link" href="/index.html">Home</a>
           <a class="nav-link" href="/saved.html">
             Saved <span id="saved-count" class="count-pill">0</span>
           </a>
@@ -39,73 +42,88 @@
       </div>
     </header>
 
-    <!-- Mobile-only tabs to switch between the two feeds -->
+    <!-- Mobile feed tabs (GitHub / News / Saved) -->
     <div class="feed-switch" role="tablist" aria-label="Choose feed">
-      <button
-        class="feed-switch-btn is-active"
-        role="tab"
-        aria-selected="true"
-        data-feed="github"
-      >
-        Repos
-      </button>
-      <button
-        class="feed-switch-btn"
-        role="tab"
-        aria-selected="false"
-        data-feed="news"
-      >
-        Articles
-      </button>
+      <div class="feed-switch-inner">
+        <button class="feed-switch-btn is-active" role="tab" aria-selected="true" data-feed="github">
+          GitHub
+        </button>
+        <button class="feed-switch-btn" role="tab" aria-selected="false" data-feed="news">
+          News
+        </button>
+        <a class="feed-switch-btn" href="/saved.html" role="tab" aria-selected="false">
+          Saved <span id="saved-count-mobile" class="count-pill" style="font-size:0.6rem">0</span>
+        </a>
+      </div>
     </div>
 
     <main class="dashboard">
-      <!-- GitHub column -->
+      <!-- Left column — GitHub -->
       <section class="column" id="github-column" aria-label="Trending repositories">
         <div class="column-head">
-          <h2>Trending Repos</h2>
-          <label class="field">
-            <span class="field-label">Language</span>
-            <select id="language-filter" aria-label="Filter repositories by language">
-              <option value="">All languages</option>
-            </select>
-          </label>
+          <div class="col-title-row">
+            <h2>GitHub Trending</h2>
+            <label class="field">
+              <span class="field-label">Language</span>
+              <select id="language-filter" aria-label="Filter by language">
+                <option value="">All</option>
+              </select>
+            </label>
+          </div>
+          <hr class="col-rule" />
         </div>
         <div id="github-feed" class="card-grid" aria-live="polite"></div>
       </section>
 
-      <!-- News column -->
+      <!-- Vertical divider (desktop only) -->
+      <div class="col-divider" aria-hidden="true"></div>
+
+      <!-- Right column — News -->
       <section class="column" id="news-column" aria-label="Latest tech articles">
         <div class="column-head">
-          <h2>Tech Articles</h2>
-          <div class="tabs" role="tablist" aria-label="Article time range">
-            <button class="tab is-active" role="tab" aria-selected="true" data-top="1">
-              Today
-            </button>
-            <button class="tab" role="tab" aria-selected="false" data-top="7">
-              This Week
-            </button>
-            <button class="tab" role="tab" aria-selected="false" data-top="30">
-              This Month
-            </button>
+          <div class="col-title-row">
+            <h2>Tech News</h2>
+            <div class="tabs" role="tablist" aria-label="Time range">
+              <button class="tab is-active" role="tab" aria-selected="true" data-top="1">Today</button>
+              <button class="tab" role="tab" aria-selected="false" data-top="7">This week</button>
+              <button class="tab" role="tab" aria-selected="false" data-top="30">This month</button>
+            </div>
           </div>
+          <hr class="col-rule" />
         </div>
         <div id="news-feed" class="card-grid" aria-live="polite"></div>
       </section>
     </main>
 
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <span class="footer-text">DevStack &mdash; GitHub API + Dev.to API</span>
+        <span class="footer-text">Client-side language filter &nbsp;·&nbsp; Client-side time filter &nbsp;·&nbsp; Save writes to localStorage</span>
+      </div>
+    </footer>
+
     <!-- Repo detail modal -->
     <div id="repo-modal" class="modal-overlay" hidden>
-      <div
-        class="modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
-      >
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <button class="modal-close" aria-label="Close dialog">&times;</button>
-        <div id="modal-body"></div>
+        <div class="modal-header" id="modal-header-zone"></div>
+        <div class="modal-body" id="modal-body"></div>
       </div>
     </div>
+
+    <!-- Mobile bottom navigation -->
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <div class="bottom-nav-inner">
+        <a class="bottom-nav-link is-active" href="/index.html">
+          <span class="bottom-nav-icon">⌂</span>
+          Home
+        </a>
+        <a class="bottom-nav-link" href="/saved.html">
+          <span class="bottom-nav-icon">♥</span>
+          Saved
+        </a>
+      </div>
+    </nav>
 
     <script type="module" src="/js/main.js"></script>
   </body>

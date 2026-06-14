@@ -143,7 +143,7 @@ function wireSaveButtons() {
     if (isSaved(id)) {
       removeItem(id);
       btn.classList.remove("is-saved");
-      btn.textContent = "☆";
+      btn.textContent = "+ Save";
       btn.setAttribute("aria-pressed", "false");
       btn.setAttribute(
         "aria-label",
@@ -152,11 +152,14 @@ function wireSaveButtons() {
     } else {
       saveItem(item);
       btn.classList.add("is-saved");
-      btn.textContent = "★";
+      btn.textContent = "✓ Saved";
       btn.setAttribute("aria-pressed", "true");
       btn.setAttribute("aria-label", "Remove from saved");
     }
     updateSavedCount();
+    // keep the mobile tab count pill in sync too
+    const mobilePill = document.getElementById("saved-count-mobile");
+    if (mobilePill) mobilePill.textContent = document.getElementById("saved-count")?.textContent ?? "";
   });
 }
 

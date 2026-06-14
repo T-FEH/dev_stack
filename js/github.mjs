@@ -83,30 +83,39 @@ export function repoCardTemplate(repo) {
 
   return `
     <article class="card clickable" data-id="${repo.id}" data-type="repo">
-      <button
-        class="save-btn ${saved ? "is-saved" : ""}"
-        data-save="${repo.id}"
-        aria-label="${saved ? "Remove from saved" : "Save repository"}"
-        aria-pressed="${saved}"
-      >${saved ? "★" : "☆"}</button>
-
-      <div class="card-top">
-        <img class="avatar" src="${escapeHtml(repo.avatar)}" alt="${escapeHtml(repo.owner)} avatar" loading="lazy" />
-        <div>
-          <div class="card-title">${escapeHtml(repo.name)}</div>
-          <div class="card-sub">${escapeHtml(repo.owner)}</div>
-        </div>
+      <div class="card-name-row">
+        <img
+          src="${escapeHtml(repo.avatar)}"
+          alt=""
+          class="avatar-sm"
+          loading="lazy"
+          style="border-radius:4px;width:18px;height:18px;"
+        />
+        <span class="card-owner-prefix">${escapeHtml(repo.owner)} /</span>
+        <span class="card-name">${escapeHtml(repo.name)}</span>
+        ${langBadge}
       </div>
 
       <p class="card-desc">${escapeHtml(repo.description) || "No description provided."}</p>
 
       <div class="card-foot">
-        ${langBadge}
         <div class="stats">
-          <span class="stat" title="Stars"><span class="stat-icon">★</span>${formatCount(repo.stars)}</span>
-          <span class="stat" title="Forks"><span class="stat-icon">⑂</span>${formatCount(repo.forks)}</span>
-          <span class="stat" title="Open issues"><span class="stat-icon">⊙</span>${formatCount(repo.issues)}</span>
+          <span class="stat" title="Stars">
+            <span class="stat-star">★</span> ${formatCount(repo.stars)}
+          </span>
+          <span class="stat" title="Forks">
+            <span class="stat-fork">⑂</span> ${formatCount(repo.forks)}
+          </span>
+          <span class="stat" title="Open issues">
+            Open: ${formatCount(repo.issues)}
+          </span>
         </div>
+        <button
+          class="save-btn ${saved ? "is-saved" : ""}"
+          data-save="${repo.id}"
+          aria-label="${saved ? "Remove from saved" : "Save repository"}"
+          aria-pressed="${saved}"
+        >${saved ? "✓ Saved" : "+ Save"}</button>
       </div>
     </article>
   `;

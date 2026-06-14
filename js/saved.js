@@ -8,15 +8,14 @@ import { qs, renderEmptyState, escapeHtml, updateSavedCount } from "./ui.mjs";
 
 const feed = qs("#saved-feed");
 
-// Reuse the feed card templates, then add a source tag and a remove button.
+// Reuse the feed card templates, then append a source tag + remove button.
 function savedCardTemplate(item) {
   const inner =
     item.type === "repo" ? repoCardTemplate(item) : articleCardTemplate(item);
-  const label = item.type === "repo" ? "Repository" : "Article";
+  const label = item.type === "repo" ? "Repo" : "Article";
 
-  // Insert footer controls just before the card's closing tag.
   const controls = `
-    <div class="card-foot">
+    <div class="saved-card-foot">
       <span class="source-tag">${label}</span>
       <button class="btn btn-danger" data-remove="${item.id}" aria-label="Remove ${escapeHtml(
     item.name || item.title
@@ -30,11 +29,11 @@ function render() {
   const items = getSaved();
   updateSavedCount();
 
+  const subtitle = qs("#saved-subtitle");
+  if (subtitle) subtitle.textContent = items.length ? `${items.length} item${items.length !== 1 ? "s" : ""}` : "";
+
   if (!items.length) {
-    renderEmptyState(
-      feed,
-      "Nothing saved yet. Bookmark repos and articles from the dashboard."
-    );
+    renderEmptyState(feed, "Nothing saved yet. Bookmark repos and articles from the dashboard.");
     return;
   }
   feed.innerHTML = items.map(savedCardTemplate).join("");

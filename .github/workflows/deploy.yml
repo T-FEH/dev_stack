@@ -36,7 +36,7 @@ jobs:
         env:
           # Vite uses this to set the asset base path for GitHub Pages.
           # Change "devstack" to match your actual repository name.
-          BASE_URL: /devstack/
+          BASE_URL: /dev_stack/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

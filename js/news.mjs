@@ -34,7 +34,7 @@ export async function fetchArticles(top = 7) {
   return json.map(transformArticle);
 }
 
-// HTML for one article card. The whole card links out to the article.
+// HTML for one article card.
 export function articleCardTemplate(article) {
   const saved = isSaved(article.id);
   const tags = article.tags
@@ -44,30 +44,40 @@ export function articleCardTemplate(article) {
 
   return `
     <article class="card" data-id="${article.id}" data-type="article">
-      <button
-        class="save-btn ${saved ? "is-saved" : ""}"
-        data-save="${article.id}"
-        aria-label="${saved ? "Remove from saved" : "Save article"}"
-        aria-pressed="${saved}"
-      >${saved ? "★" : "☆"}</button>
+      <div class="card-title">
+        <a href="${escapeHtml(article.url)}" target="_blank" rel="noopener noreferrer">
+          ${escapeHtml(article.title)}
+        </a>
+      </div>
 
-      <div class="card-top">
-        <img class="avatar" src="${escapeHtml(article.avatar)}" alt="${escapeHtml(article.author)} avatar" loading="lazy" />
-        <div>
-          <div class="card-title">
-            <a href="${escapeHtml(article.url)}" target="_blank" rel="noopener noreferrer">
-              ${escapeHtml(article.title)}
-            </a>
-          </div>
-          <div class="card-sub">${escapeHtml(article.author)} · ${article.readingTime} min read</div>
-        </div>
+      <div class="article-meta">
+        <img
+          class="avatar-sm"
+          src="${escapeHtml(article.avatar)}"
+          alt=""
+          loading="lazy"
+        />
+        <span>${escapeHtml(article.author)}</span>
+        <span class="meta-sep">|</span>
+        <span>${article.readingTime} min read</span>
+        <span class="meta-sep">|</span>
+        <span><span class="stat-heart">♥</span> ${formatCount(article.reactions)}</span>
       </div>
 
       ${tags ? `<div class="tag-row">${tags}</div>` : ""}
 
-      <div class="stats">
-        <span class="stat" title="Reactions"><span class="stat-icon">♥</span>${formatCount(article.reactions)}</span>
-        <span class="stat" title="Comments"><span class="stat-icon">💬</span>${formatCount(article.comments)}</span>
+      <div class="card-foot">
+        <div class="stats">
+          <span class="stat">
+            <span class="stat-comm">◎</span> ${formatCount(article.comments)} comments
+          </span>
+        </div>
+        <button
+          class="save-btn ${saved ? "is-saved" : ""}"
+          data-save="${article.id}"
+          aria-label="${saved ? "Remove from saved" : "Save article"}"
+          aria-pressed="${saved}"
+        >${saved ? "✓ Saved" : "+ Save"}</button>
       </div>
     </article>
   `;
