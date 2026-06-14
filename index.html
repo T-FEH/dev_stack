@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevStack — Trending Repos & Tech Articles</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="logo" href="/index.html">
+          <span class="logo-mark">&lt;/&gt;</span> DevStack
+        </a>
+
+        <div class="search-wrap">
+          <input
+            id="global-search"
+            class="search-input"
+            type="search"
+            placeholder="Search repos and articles…"
+            aria-label="Search repositories and articles"
+            autocomplete="off"
+          />
+        </div>
+
+        <nav class="main-nav" aria-label="Primary">
+          <a class="nav-link" href="/saved.html">
+            Saved <span id="saved-count" class="count-pill">0</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Mobile-only tabs to switch between the two feeds -->
+    <div class="feed-switch" role="tablist" aria-label="Choose feed">
+      <button
+        class="feed-switch-btn is-active"
+        role="tab"
+        aria-selected="true"
+        data-feed="github"
+      >
+        Repos
+      </button>
+      <button
+        class="feed-switch-btn"
+        role="tab"
+        aria-selected="false"
+        data-feed="news"
+      >
+        Articles
+      </button>
+    </div>
+
+    <main class="dashboard">
+      <!-- GitHub column -->
+      <section class="column" id="github-column" aria-label="Trending repositories">
+        <div class="column-head">
+          <h2>Trending Repos</h2>
+          <label class="field">
+            <span class="field-label">Language</span>
+            <select id="language-filter" aria-label="Filter repositories by language">
+              <option value="">All languages</option>
+            </select>
+          </label>
+        </div>
+        <div id="github-feed" class="card-grid" aria-live="polite"></div>
+      </section>
+
+      <!-- News column -->
+      <section class="column" id="news-column" aria-label="Latest tech articles">
+        <div class="column-head">
+          <h2>Tech Articles</h2>
+          <div class="tabs" role="tablist" aria-label="Article time range">
+            <button class="tab is-active" role="tab" aria-selected="true" data-top="1">
+              Today
+            </button>
+            <button class="tab" role="tab" aria-selected="false" data-top="7">
+              This Week
+            </button>
+            <button class="tab" role="tab" aria-selected="false" data-top="30">
+              This Month
+            </button>
+          </div>
+        </div>
+        <div id="news-feed" class="card-grid" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <!-- Repo detail modal -->
+    <div id="repo-modal" class="modal-overlay" hidden>
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <button class="modal-close" aria-label="Close dialog">&times;</button>
+        <div id="modal-body"></div>
+      </div>
+    </div>
+
+    <script type="module" src="/js/main.js"></script>
+  </body>
+</html>
